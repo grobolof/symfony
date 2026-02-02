@@ -52,7 +52,7 @@ DB_DATABASE=postgres
 services:  
   
   application:
-    image: armhaina/symfony-build-hub:php-8.5-rc-fpm-trixie  
+    image: armhaina/symfony:php-8.5-rc-fpm-trixie  
     working_dir: ${APP_PATH}
     env_file: .env
     environment:
