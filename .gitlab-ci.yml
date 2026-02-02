@@ -1,0 +1,28 @@
+image: docker:latest
+
+services:
+  - docker:dind
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_SUBMODULE_FORCE_HTTPS: "true"
+
+before_script:
+  - apk add bash
+  - echo "$CI_REGISTRY_PASSWORD" | docker login $CI_REGISTRY -u $CI_REGISTRY_USER --password-stdin
+  # Явное обновление сабмодулей
+  - git submodule sync --recursive
+  - git submodule update --init --recursive --remote
+  - git submodule foreach --recursive 'git checkout main && git pull origin main' # получение последнего коммита в сабмодулях (тест)
+
+build:
+  stage: build
+  script:
+    - ./submodules/docker-build-hub/run.sh
+    #- chmod 777 run.sh && chmod +x run.sh && ./run.sh
+  rules:
+    - if: $CI_COMMIT_REF_NAME == $CI_DEFAULT_BRANCH
+      variables:
+        DOCKER_BUILD: "MAIN_PUSH"
+  tags:
+    - dind

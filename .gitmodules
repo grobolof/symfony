@@ -1,0 +1,3 @@
+[submodule "submodules/docker-build-hub"]
+	path = submodules/docker-build-hub
+	url = git@gitlab.com:xarmantaranta/submodule/build/hub/docker-build-hub.git
