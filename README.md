@@ -99,6 +99,8 @@ docker compose up -d --build --remove-orphans
 
 В данном разделе представлены решения для наиболее частых проблем при локальной разработке.
 
+---
+
 ### 🗄️ Подключить БД
 
 ☝️ Если используете БД для своего приложения, то вам необходимо в файле `.env` самого Symfony (если использовали
@@ -111,6 +113,8 @@ docker compose up -d --build --remove-orphans
 ```
 DATABASE_URL="postgresql://$DB_USER:$DB_PASSWORD@database:5432/$DB_DATABASE?serverVersion=18&charset=utf8"
 ```
+
+---
 
 ### 🐞 Настроить Xdebug (PHPStorm)
 
