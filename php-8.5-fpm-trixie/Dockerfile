@@ -64,15 +64,28 @@ RUN docker-php-ext-configure intl; \
     xsl \
     zip
 
-RUN pecl install apcu; \
-    docker-php-ext-enable apcu
+# pecl.php.net is deprecated and often returns 504; install from GitHub instead of `pecl`.
+ARG APCU_VERSION=5.1.28
+ARG REDIS_VERSION=6.3.0
+ARG XDEBUG_VERSION=3.5.0
 
-RUN pecl install --onlyreqdeps --force redis; \
-    rm -rf /tmp/pear; \
-    docker-php-ext-enable redis
+RUN set -eux; \
+    mkdir -p /usr/src/php/ext/apcu; \
+    curl -fsSL "https://github.com/krakjoe/apcu/archive/refs/tags/v${APCU_VERSION}.tar.gz" \
+      | tar -xz -C /usr/src/php/ext/apcu --strip-components=1; \
+    docker-php-ext-install -j"$(nproc)" apcu
 
-RUN pecl install xdebug-3.5.0; \
-    docker-php-ext-enable xdebug
+RUN set -eux; \
+    mkdir -p /usr/src/php/ext/redis; \
+    curl -fsSL "https://github.com/phpredis/phpredis/archive/refs/tags/${REDIS_VERSION}.tar.gz" \
+      | tar -xz -C /usr/src/php/ext/redis --strip-components=1; \
+    docker-php-ext-install -j"$(nproc)" redis
+
+RUN set -eux; \
+    mkdir -p /usr/src/php/ext/xdebug; \
+    curl -fsSL "https://github.com/xdebug/xdebug/archive/refs/tags/${XDEBUG_VERSION}.tar.gz" \
+      | tar -xz -C /usr/src/php/ext/xdebug --strip-components=1; \
+    docker-php-ext-install -j"$(nproc)" xdebug
 
 COPY docker-entrypoint.sh /usr/local/bin/
 COPY config/conf/nginx.conf /etc/nginx/conf.d/nginx.conf
