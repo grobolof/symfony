@@ -4,9 +4,6 @@
 
 # Symfony
 
-[![PHP 8.0](https://img.shields.io/badge/php-8.0-%23777BB4?style=for-the-badge&logo=php&logoColor=black">)](https://www.php.net/releases/8.0/ru.php)
-[![Symfony 6.0](https://img.shields.io/badge/symfony-6.0-%23000000.svg?style=for-the-badge&logo=symfony&logoColor=white)](https://symfony.com/releases/6.0)
-
 ✊ Образы для быстрого прототипирования актуальной версии [Symfony][1] под соответствующую версию PHP.
 
 ## 🚀 Старт
