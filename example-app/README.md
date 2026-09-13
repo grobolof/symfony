@@ -1,19 +1,17 @@
 # Быстрый старт 🚀
 
-- ⬇️ Скачайте [example-app](.) (переименуйте раздел под ваш проект).
+- ⬇️ Скачайте [example-app](.) (переименуйте каталог под ваш проект).
 - 📄 Скопируйте `.env.example` в `.env` (см. [таблицу с переменными](#env-vars)). СУБД проекта — PostgreSQL.
-- ⚡ Запустите проект выполнив команду из корня проекта: `make up`.
+- ⚡ Запустите проект выполнив команду из корня репозитория: `make up`.
 - 📊 В логах контейнера `application` вам будет доступен процесс создания проекта.
 - ✅ Завершением сборки можно считать появление строки `✅ КОНТЕЙНЕР ГОТОВ — ЗАПУСКАЮ NGINX И PHP-FPM`.
-
-⚠️ **КОРЕНЬ ПРОЕКТА** означает файлы приложения в папке `app`, которые будут смонтированы в контейнер!
 
 <a id="env-vars"></a>
 
 | Название переменной | Описание переменной | Требуется |
 | :------------------ | :------------------ | :-------- |
 | <a id="APP_HOST"></a>[APP_HOST](#APP_HOST) | Хост вашего проекта (хост необходимо добавить в файл hosts вашей системы, пример: `127.0.0.1   symfony.docker.local`) | ✅ |
-| <a id="APP_PATH"></a>[APP_PATH](#APP_PATH) | Путь от корня до проекта внутри контейнера | ✅ |
+| <a id="APP_PATH"></a>[APP_PATH](#APP_PATH) | Путь внутри контейнера, куда монтируется корень репозитория (`./:${APP_PATH}`) | ✅ |
 | <a id="DB_CONNECTION"></a>[DB_CONNECTION](#DB_CONNECTION) | Драйвер Doctrine. Для этого примера — `pgsql`. Допустимо: `pgsql`, `mysql`, `mariadb`, `sqlite` | ✅ |
 | <a id="DB_HOST"></a>[DB_HOST](#DB_HOST) | Хост базы данных (хостом БД является название контейнера СУБД из docker-compose.yml; используется для СУБД и Doctrine) | ✅ |
 | <a id="DB_PORT"></a>[DB_PORT](#DB_PORT) | Порт базы данных. Для PostgreSQL — `5432` | ✅ |
@@ -28,8 +26,8 @@
 
 После успешной сборки проекта можете перейти на страницу `http://APP_HOST` (заменить [**APP_HOST**](#APP_HOST) на хост из `.env` файла). Вы должны увидеть приветственную страницу `Symfony`.
 
-1. Если в каталоге `app` ещё не было проекта, контейнер сам создаст актуальную версию Symfony через `composer create-project`.
-2. При первом создании проекта в файл `app/.env` записывается `DATABASE_URL` из доступов к СУБД.
+1. Если в корне репозитория ещё нет `bin/console`, контейнер сам создаст актуальную версию Symfony через `composer create-project`. Файлы репозитория (`docker-compose.yml`, `makefile`, `.env`, `README.md`) не перезаписываются.
+2. При первом создании проекта в корневой `.env` (тот же файл, что читает Compose) записывается `DATABASE_URL` из доступов к СУБД.
 3. Миграции Doctrine накатываются автоматически после готовности базы.
 4. Для работы с приложением используйте `php bin/console` (см. [команды](#команды) и `make console`).
 5. 🔥 **Symfony** успешно установлен!
@@ -40,7 +38,7 @@
 
 ## Доступы СУБД для Symfony через переменные окружения
 
-👇 При первом создании проекта значение уже подставляется в `app/.env` как `DATABASE_URL`. Если создаёте проект вручную, замените в `app/.env` переменную `DATABASE_URL` (из [DB_CONNECTION](#DB_CONNECTION), [DB_HOST](#DB_HOST), [DB_PORT](#DB_PORT), [DB_DATABASE](#DB_DATABASE), [DB_USERNAME](#DB_USERNAME), [DB_PASSWORD](#DB_PASSWORD)).
+👇 При первом создании проекта значение уже подставляется в `.env` как `DATABASE_URL`. Если создаёте проект вручную, замените в `.env` переменную `DATABASE_URL` (из [DB_CONNECTION](#DB_CONNECTION), [DB_HOST](#DB_HOST), [DB_PORT](#DB_PORT), [DB_DATABASE](#DB_DATABASE), [DB_USERNAME](#DB_USERNAME), [DB_PASSWORD](#DB_PASSWORD)).
 
 ```
 DATABASE_URL="postgresql://login:pass@database:5432/symfony?serverVersion=18&charset=utf8"
@@ -48,7 +46,7 @@ DATABASE_URL="postgresql://login:pass@database:5432/symfony?serverVersion=18&cha
 
 ## Настройка почты через Mailpit
 
-👇 Если [`MAILPIT_ENABLED`](#MAILPIT_ENABLED)=1, контейнер направит `mail()` PHP в Mailpit и пропишет `MAILER_DSN` в `app/.env`. Письма смотрите на `http://localhost:8025`.
+👇 Если [`MAILPIT_ENABLED`](#MAILPIT_ENABLED)=1, контейнер направит `mail()` PHP в Mailpit и пропишет `MAILER_DSN` в `.env`. Письма смотрите на `http://localhost:8025`.
 
 # Документация, пакеты и команды 🎨
 

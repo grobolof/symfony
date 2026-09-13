@@ -1,5 +1,7 @@
 #!/bin/bash
-# Создаёт проект Symfony, если bin/console ещё нет в каталоге приложения.
+# Создаёт проект Symfony в APP_PATH, если bin/console ещё нет.
+# APP_PATH — корень репозитория (volume ./:${APP_PATH}), поэтому docker-compose.yml,
+# makefile, README, .env и .gitignore не перезаписываются.
 
 set_env() {
   local key=$1 value=$2 file="$APP_PATH/.env"
@@ -11,6 +13,21 @@ set_env() {
   else
     printf '%s=%s\n' "$key" "$value" >> "$file"
   fi
+}
+
+merge_env() {
+  local src=$1 dest=$2
+  [[ -f "$src" && -f "$dest" ]] || return 0
+  local line key
+  while IFS= read -r line || [[ -n "$line" ]]; do
+    [[ "$line" =~ ^[[:space:]]*# ]] && continue
+    [[ -z "${line// }" ]] && continue
+    key="${line%%=*}"
+    [[ -n "$key" ]] || continue
+    if ! grep -qE "^#?${key}=" "$dest"; then
+      printf '%s\n' "$line" >> "$dest"
+    fi
+  done < "$src"
 }
 
 database_url() {
@@ -58,7 +75,19 @@ else
       orm-fixtures \
       profiler
   )
-  cp -a /tmp/symfony-app/. "$APP_PATH/"
+
+  # -n: не затираем файлы репозитория, уже лежащие в корне (compose, .env, README)
+  cp -an /tmp/symfony-app/. "$APP_PATH/"
+
+  if [[ ! -f "$APP_PATH/.env" ]]; then
+    if [[ -f /tmp/symfony-app/.env ]]; then
+      cp /tmp/symfony-app/.env "$APP_PATH/.env"
+    elif [[ -f "$APP_PATH/.env.example" ]]; then
+      cp "$APP_PATH/.env.example" "$APP_PATH/.env"
+    fi
+  fi
+
+  merge_env /tmp/symfony-app/.env "$APP_PATH/.env"
   rm -rf /tmp/symfony-app
 
   set_env DATABASE_URL "$(database_url)"
