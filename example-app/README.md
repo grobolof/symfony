@@ -54,10 +54,10 @@ DATABASE_URL="postgresql://login:pass@database:5432/symfony?serverVersion=18&cha
 
 ## Документация
 
-1. [Routing](https://symfony.com/doc/current/routing.html) — Маршруты и REST API.
-2. [Doctrine](https://symfony.com/doc/current/doctrine.html) — Работа с базой данных.
-3. [Console](https://symfony.com/doc/current/console.html) — Консольные команды.
-4. [Scheduler](https://symfony.com/doc/current/scheduler.html) — Планировщик повторяющихся задач.
+1. [Routing](https://symfony.com/doc/current/routing.html) — Маршруты и REST API
+2. [Doctrine](https://symfony.com/doc/current/doctrine.html) — Работа с базой данных
+3. [Console](https://symfony.com/doc/current/console.html) — Консольные команды
+4. [Scheduler](https://symfony.com/doc/current/scheduler.html) — Планировщик повторяющихся задач
 5. [Testing](https://symfony.com/doc/current/testing.html) — Тестирование (пак пакетов)
 
 ## Пакеты
